@@ -1,54 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
-    <style type="text/css">
-        .container {
-            width: 500px;
-            margin: auto;
-            text-align: center;
+    <title>Đồng hồ đếm ngược bằng JS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <style>
+        .color {
+            max-width: 500px;
+            height: 50px;
+            background-color: powderblue;
         }
-        p {
-            font-size: 50px;
+        .main {
+            padding-left: 200px;
+            padding-right: 200px;
+        }
+        h1 {
+            color: maroon;
+            margin-left: 40px;
         }
     </style>
+    <script language="javascript">
+
+        let h = null;
+        let m = null;
+        let s = null;
+        let timeout = null; // Timeout
+
+        function start() {
+            if (h === null) {
+                h = parseInt(document.getElementById('h_val').value);
+                m = parseInt(document.getElementById('m_val').value);
+                s = parseInt(document.getElementById('s_val').value);
+            }
+
+            if (s === -1) {
+                m -= 1;
+                s = 59;
+            }
+
+            if (m === -1) {
+                h -= 1;
+                m = 59;
+            }
+
+            if (h === -1) {
+                clearTimeout(timeout);
+                alert('Hết giờ');
+                return false;
+            }
+
+            document.getElementById('h').innerText = h.toString();
+            document.getElementById('m').innerText = m.toString();
+            document.getElementById('s').innerText = s.toString();
+            timeout = setTimeout(function () {
+                s--;
+                start();
+            }, 1000);
+        }
+
+        function stop() {
+            clearTimeout(timeout);
+        }
+
+        function reset() {
+            clearTimeout(timeout);
+            h = parseInt(document.getElementById('h_val').value);
+            m = parseInt(document.getElementById('m_val').value);
+            s = parseInt(document.getElementById('s_val').value);
+            document.getElementById('h').innerText = document.getElementById('h_val').value;
+            document.getElementById('m').innerText = document.getElementById('m_val').value;
+            document.getElementById('s').innerText = document.getElementById('s_val').value;
+
+        }
+    </script>
 </head>
 <body>
-<div class="container">
-    <h2>Freetuts.net hướng dẫn tạo đồng hồ đếm ngược</h2>
 
-    <p id="demo"></p>
+<div class="main">
+    <div class="main">
+        <h1 align="center" class="color"> Đếm ngược </h1>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Hour</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Hour" aria-label="Username"
+                   aria-describedby="basic-addon1" id="h_val">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon">Minute</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Minute" aria-label="Username"
+                   aria-describedby="basic-addon1" id="m_val">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addo">Second</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Second" aria-label="Username"
+                   aria-describedby="basic-addon1" id="s_val">
+        </div>
+        <p class="body">
+
+            <input type="button" value="Start" onclick="start()" class="btn btn-success"/>
+
+            <input type="button" value="Stop" onclick="stop()" class="btn btn-danger"/>
+            <input type="button" value="Reset" onclick="reset()" class="btn btn-primary"/> <br/> <br/>
+        </p>
+
+        <p class="css">
+            <span id="h"></span> :
+            <span id="m"></span> :
+            <span id="s"></span>
+        </p>
+    </div>
 </div>
-<script>
-    // Thiết lập thời gian đích mà ta sẽ đếm
-
-    var countDownDate = new Date("Aug 10, 2019 09:27:25").getTime();
-
-    // cập nhập thời gian sau mỗi 1 giây
-    var x = setInterval(function() {
-
-        // Lấy thời gian hiện tại
-        var now = new Date().getTime();
-
-        // Lấy số thời gian chênh lệch
-        var distance = countDownDate - now;
-
-        // Tính toán số ngày, giờ, phút, giây từ thời gian chênh lệch
-        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        // HIển thị chuỗi thời gian trong thẻ p
-        document.getElementById("demo").innerHTML = days + "Ngày " + hours + "Giờ "
-            + minutes + "Phút " + seconds + "Giây ";
-
-        // Nếu thời gian kết thúc, hiển thị chuỗi thông báo
-        if (distance < 0) {
-            clearInterval(x);
-            document.getElementById("demo").innerHTML = "Thời gian đếm ngược đã kết thúc";
-        }
-    }, 1000);
-</script>
+</div>
+<div class="col-md-2"></div>
 </body>
 </html>
